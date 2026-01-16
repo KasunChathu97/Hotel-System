@@ -1,0 +1,809 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+    padding: 20px;
+}
+
+/* Home */
+.home-title {
+    margin: 0;
+    text-align: center;
+    font-weight: 900;
+}
+
+.home-hero {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.home-hero__heading {
+    margin: 0;
+    font-weight: 900;
+}
+
+.home-hero__sub {
+    margin: 10px 0 0;
+    opacity: 0.8;
+    line-height: 1.4;
+}
+
+.home-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+@media (min-width: 720px) {
+    .home-cards {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (min-width: 992px) {
+    .home-cards {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+.home-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background: #fff;
+    padding: 14px;
+}
+
+.home-card:hover {
+    background: #f2f2f2;
+}
+
+.home-card__title {
+    font-weight: 900;
+    font-size: 18px;
+}
+
+.home-card__desc {
+    margin-top: 6px;
+    opacity: 0.8;
+    line-height: 1.35;
+}
+
+.home-card__cta {
+    margin-top: 10px;
+    font-weight: 800;
+}
+
+.message {
+    background: white;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin: 10px 0 20px;
+}
+
+.nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin: 10px 0 20px;
+    background: white;
+    padding: 10px 12px;
+    border-radius: 8px;
+}
+
+.nav a {
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.nav a:hover {
+    background: #f2f2f2;
+    text-decoration: underline;
+}
+
+.nav a[aria-current="page"] {
+    background: #f2f2f2;
+    font-weight: 700;
+}
+
+.reservation-container {
+    max-width: 650px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 5px;
+}
+
+.reservation-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Two-column forms wrapper (Room Reservation + Checkout & Issue Receipt) */
+.forms-two-col {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+@media (min-width: 992px) {
+    .forms-two-col {
+        grid-template-columns: 1fr 1fr;
+        align-items: start;
+    }
+}
+
+.forms-two-col .reservation-container {
+    max-width: none;
+    margin: 0;
+}
+
+/* Room Availability */
+.room-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+.availability-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.availability-controls label {
+    font-weight: 700;
+}
+
+.availability-controls input[type="date"] {
+    padding: 6px 10px;
+}
+
+.availability-label {
+    margin-bottom: 10px;
+    opacity: 0.8;
+}
+
+.room-item {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.room-item__title {
+    font-weight: 700;
+}
+
+.room-item__meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.room-item__detail {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid #ccc;
+    font-size: 12px;
+    font-weight: 700;
+    background: #f2f2f2;
+}
+
+.badge--available {
+    border-color: #9ad3a6;
+    background: #eaf7ed;
+    color: #1f7a31;
+}
+
+.badge--occupied {
+    border-color: #f2a3a3;
+    background: #fdecec;
+    color: #a32222;
+}
+
+/* Booking History */
+.history-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.history-table th,
+.history-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+    text-align: left;
+}
+
+.history-table thead th {
+    background: #f2f2f2;
+    font-weight: 700;
+    border-bottom: 1px solid #ccc;
+}
+
+.history-table tbody tr:nth-child(even) {
+    background: #fafafa;
+}
+
+.history-table tbody tr:hover {
+    background: #f2f2f2;
+}
+
+.history-actions {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.history-action {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background: #fff;
+    cursor: pointer;
+}
+
+.history-action:hover {
+    background: #f2f2f2;
+}
+
+.history-action--danger {
+    border-color: #f2a3a3;
+    background: #fdecec;
+}
+
+/* Kitchen Ingredients */
+.kitchen-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 6px 0 10px;
+}
+
+.kitchen-title {
+    margin: 0;
+    font-weight: 900;
+}
+
+.kitchen-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background: #fff;
+}
+
+@media (min-width: 720px) {
+    .kitchen-form {
+        grid-template-columns: 1fr 220px auto;
+        align-items: end;
+    }
+}
+
+.kitchen-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.kitchen-label {
+    font-weight: 800;
+    opacity: 0.9;
+}
+
+.kitchen-input {
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #fff;
+    outline: none;
+}
+
+.kitchen-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.kitchen-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-top: 14px;
+}
+
+@media (min-width: 992px) {
+    .kitchen-grid {
+        grid-template-columns: 1fr 1fr;
+        align-items: start;
+    }
+}
+
+.kitchen-card {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background: #fff;
+    padding: 12px;
+}
+
+.kitchen-subtitle {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.kitchen-lowstock {
+    margin-top: 12px;
+}
+
+.kitchen-alert {
+    border: 1px solid #f2a3a3;
+    background: #fdecec;
+    border-radius: 10px;
+    padding: 10px 12px;
+}
+
+.kitchen-alert__title {
+    font-weight: 900;
+    margin-bottom: 6px;
+}
+
+.kitchen-alert__list {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.kitchen-status {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid #ccc;
+    font-size: 12px;
+    font-weight: 800;
+    background: #f2f2f2;
+}
+
+.kitchen-status--ok {
+    border-color: #9ad3a6;
+    background: #eaf7ed;
+    color: #1f7a31;
+}
+
+.kitchen-status--low {
+    border-color: #f2a3a3;
+    background: #fdecec;
+    color: #a32222;
+}
+
+/* Income page */
+.income-header {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 10px;
+    margin: 8px 0 6px;
+}
+
+.income-header__title {
+    margin: 0;
+    text-align: center;
+    font-weight: 900;
+}
+
+.income-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 14px;
+}
+
+@media (min-width: 720px) {
+    .income-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (min-width: 992px) {
+    .income-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+.income-filter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.income-filter__label {
+    font-weight: 800;
+    opacity: 0.9;
+}
+
+.income-date {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.income-card {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 14px;
+}
+
+.income-label {
+    font-weight: 800;
+    opacity: 0.9;
+}
+
+.income-value {
+    margin-top: 8px;
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1.1;
+}
+
+.income-sub {
+    margin-top: 6px;
+    opacity: 0.7;
+    font-size: 13px;
+}
+
+.income-block {
+    margin-top: 18px;
+}
+
+.income-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    z-index: 9999;
+}
+
+.modal-card {
+    width: 100%;
+    max-width: 650px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 16px;
+    max-height: calc(100vh - 32px);
+    overflow: auto;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.modal-title {
+    margin: 0;
+    font-weight: 700;
+}
+
+.modal-close {
+    border: 1px solid #ccc;
+    background: #fff;
+    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.modal-close:hover {
+    background: #f2f2f2;
+}
+
+.modal-body {
+    padding: 6px 0 2px;
+}
+
+.modal-text {
+    margin: 0;
+    line-height: 1.45;
+}
+
+.modal-text small {
+    opacity: 0.85;
+}
+
+.modal-card .modal-body {
+    border-top: 1px solid #eee;
+    padding-top: 12px;
+    margin-top: 6px;
+}
+
+.modal-card .modal-actions {
+    border-top: 1px solid #eee;
+    margin-top: 12px;
+    padding-top: 12px;
+}
+
+.modal-actions.modal-actions--end {
+    justify-content: flex-end;
+}
+
+/* Modal form layout (scoped) */
+.modal-card .reservation-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+@media (min-width: 720px) {
+    .modal-card .reservation-form {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.modal-card .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.modal-card .form-group label {
+    font-weight: 700;
+    opacity: 0.9;
+}
+
+.modal-card .form-control {
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #fff;
+    outline: none;
+}
+
+.modal-card .form-control[readonly] {
+    background: #fafafa;
+}
+
+.modal-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding-top: 4px;
+}
+
+/* Receipt modal polish */
+#payReceiptModal .modal-actions {
+    justify-content: flex-end;
+}
+
+
+
+.history-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    display: grid;
+    gap: 10px;
+}
+
+.history-item {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background: #fff;
+    padding: 12px;
+}
+
+.history-item__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.history-date {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.history-title {
+    font-weight: 700;
+}
+
+.history-detail {
+    margin-top: 4px;
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+.history-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid #ccc;
+    font-size: 12px;
+    font-weight: 700;
+    background: #f2f2f2;
+}
+
+.history-badge--reserve {
+    border-color: #9ad3a6;
+    background: #eaf7ed;
+    color: #1f7a31;
+}
+
+.history-badge--checkout {
+    border-color: #9bb7ff;
+    background: #eef3ff;
+    color: #1a3f9a;
+}
+
+/* Receipt */
+.receipt-card {
+    margin-top: 14px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 14px;
+    min-height: 24px;
+}
+
+.receipt-card:empty {
+    display: none;
+}
+
+.receipt-title {
+    margin: 0 0 10px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.receipt-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+}
+
+/* Force one-by-one rows on receipts when needed */
+.receipt-grid--single {
+    grid-template-columns: 1fr !important;
+}
+
+@media (min-width: 720px) {
+    .receipt-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.receipt-row {
+    display: flex;
+    gap: 8px;
+}
+
+/* Receipt key/value rows (used in the Hotel Receipt modal/print) */
+.receipt-kv {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 12px;
+    padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+    align-items: start;
+}
+
+.receipt-kv:last-child {
+    border-bottom: 0;
+}
+
+.receipt-kv--total {
+    background: #f2f2f2;
+    font-weight: 700;
+}
+
+.receipt-value {
+    word-break: break-word;
+}
+
+.receipt-label {
+    font-weight: 700;
+    min-width: 120px;
+}
+
+.receipt-footer {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+    text-align: center;
+    opacity: 0.9;
+}
+
+.history-badge--default {
+    border-color: #ccc;
+    background: #f2f2f2;
+    color: #333;
+}
+
+/* Bottom navbar (appears when scrolling) */
+.nav--bottom {
+    position: fixed;
+    left: 20px;
+    right: 20px;
+    top: auto;
+    z-index: 1000;
+    display: flex;
+    opacity: 0;
+    transform: translateY(-12px);
+    pointer-events: none;
+    transition: opacity 180ms ease, transform 180ms ease;
+}
+
+body.is-scrolled .nav--bottom {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.section {
+    background: white;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+button {
+    padding: 5px 10px;
+    margin-top: 5px;
+}

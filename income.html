@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Income - Hotel Booking System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <h1>Hotel Booking System</h1>
+
+    <div id="navbar"></div>
+
+    <div class="section">
+        <div class="income-header">
+            <button type="button" class="history-action" onclick="openIncomeRecordsModal()">Records</button>
+            <h2 class="income-header__title">Income</h2>
+        </div>
+
+        <div class="income-grid">
+            <div class="income-card">
+                <div class="income-label">Daily Income</div>
+                <div class="income-value">Rs.<span id="dailyIncome">0</span></div>
+                <div class="income-sub">Today</div>
+            </div>
+            <div class="income-card">
+                <div class="income-label">Monthly Income</div>
+                <div class="income-value">Rs.<span id="monthlyIncome">0</span></div>
+                <div class="income-sub">This month</div>
+            </div>
+            <div class="income-card">
+                <div class="income-label">Selected Day Income</div>
+                <div class="income-value">Rs.<span id="selectedDayIncome">0</span></div>
+                <div class="income-sub" id="selectedDayCaption"></div>
+            </div>
+        </div>
+
+        <div class="income-filter">
+            <div class="income-filter__label">Select Day</div>
+            <input type="date" id="incomeDayInput" class="income-date" />
+            <button type="button" class="history-action" onclick="applyIncomeDayFilter()">View</button>
+        </div>
+        <div class="section" id="receiptSection">
+            <div class="forms-two-col">
+                <div class="income-block">
+                    <h3 class="income-title">Selected Day Records</h3>
+                    <div class="history-table-wrap" style="margin-top: 12px;">
+                        <table id="dailyIncomeRecordsTable" class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Date &amp; Time</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div id="dailyIncomeRecordsEmpty" class="text-center" style="margin-top: 10px;"></div>
+                </div>
+
+                <div class="income-block">
+                    <h3 class="income-title">Monthly Records</h3>
+                    <div class="history-table-wrap" style="margin-top: 12px;">
+                        <table id="monthlyIncomeTable" class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Month</th>
+                                    <th>Total Income</th>
+                                    <th>Records</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div id="monthlyIncomeEmpty" class="text-center" style="margin-top: 10px;"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="incomeRecordsModal" class="modal-overlay" style="display:none;" aria-hidden="true">
+        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="incomeRecordsModalTitle">
+            <div class="modal-header">
+                <h3 id="incomeRecordsModalTitle" class="modal-title">This Month Income Records</h3>
+                <button type="button" class="modal-close" onclick="closeIncomeRecordsModal()">×</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="history-table-wrap" style="margin-top: 10px;">
+                    <table id="monthlyIncomeRecordsTable" class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Date &amp; Time</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div id="monthlyIncomeRecordsEmpty" class="text-center" style="margin-top: 10px;"></div>
+            </div>
+
+            <div class="modal-actions modal-actions--end">
+                <button type="button" class="history-action" onclick="closeIncomeRecordsModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

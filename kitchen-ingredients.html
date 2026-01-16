@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Kitchen Ingredients - Hotel Booking System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <h1>Hotel Booking System</h1>
+
+    <div id="navbar"></div>
+
+    <!-- Message area for alerts (optional) -->
+    <div id="message" style="color: green; margin-bottom: 10px;"></div>
+
+    <div class="section">
+        <div class="kitchen-header">
+            <h2 class="kitchen-title">Kitchen Ingredients</h2>
+        </div>
+
+        <div class="kitchen-form" role="group" aria-label="Ingredient actions">
+            <div class="kitchen-field">
+                <label class="kitchen-label" for="ingredientName">Ingredient Name</label>
+                <input type="text" id="ingredientName" class="kitchen-input" placeholder="e.g. rice, egg">
+            </div>
+            <div class="kitchen-field">
+                <label class="kitchen-label" for="ingredientQty">Quantity</label>
+                <input type="number" id="ingredientQty" class="kitchen-input" placeholder="e.g. 10" min="1" step="1">
+            </div>
+            <div class="kitchen-actions">
+                <button type="button" class="history-action" onclick="addIngredient()">Add Stock</button>
+                <button type="button" class="history-action history-action--danger" onclick="removeIngredient()">Used</button>
+            </div>
+        </div>
+
+        <div class="kitchen-grid">
+            <div class="kitchen-card">
+                <h3 class="kitchen-subtitle">Current Stock</h3>
+                <div class="history-table-wrap" style="margin-top: 12px;">
+                    <table id="ingredientStockTable" class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Ingredient</th>
+                                <th>Quantity</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <div id="lowStock" class="kitchen-lowstock"></div>
+            </div>
+
+            <div class="kitchen-card">
+                <h3 class="kitchen-subtitle">Ingredient History</h3>
+                <div class="history-table-wrap" style="margin-top: 12px;">
+                    <table id="ingredientHistoryTable" class="history-table">
+                        <thead>
+                            <tr>
+                                <th>Date &amp; Time</th>
+                                <th>Type</th>
+                                <th>Ingredient</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div id="ingredientHistoryEmpty" class="text-center" style="margin-top: 10px;"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
