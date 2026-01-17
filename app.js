@@ -2432,14 +2432,55 @@ async function injectNavbar() {
 
         // Fallback: render a basic navbar so the UI still works.
         mount.innerHTML = `
-            <nav class="nav">
-                <a href="index.html">Home</a>
-                <a href="room.html">Room</a>
-                <a href="income.html">Income</a>
-                <a href="kitchen-ingredients.html">Kitchen Ingredients</a>
+            <nav class="nav" aria-label="Main navigation">
+                <div class="nav__brand">
+                    <div class="nav__company">kandy kaviyan</div>
+                    <div class="nav__details">
+                        <div class="nav__address">peradeniya rd, Kandy.</div>
+                        <div class="nav__phone">0773309991</div>
+                    </div>
+                </div>
+                <div class="nav__links">
+                    <a href="index.html">Home</a>
+                    <a href="room.html">Room</a>
+                    <a href="income.html">Income</a>
+                    <a href="kitchen-ingredients.html">Kitchen Ingredients</a>
+                </div>
+                <div class="nav__logo" aria-label="Company logo">
+                    <img src="image/logo.png" alt="kandy kaviyan" />
+                </div>
             </nav>
         `;
         setActiveNavbarLink(mount);
+    }
+}
+
+async function injectSiteHeader() {
+    const mount = document.getElementById('siteHeader');
+    if (!mount) return;
+
+    try {
+        const res = await fetch('header.html', { cache: 'no-store' });
+        if (!res.ok) throw new Error(`Failed to load header.html (${res.status})`);
+        mount.innerHTML = await res.text();
+    } catch (e) {
+        // If the site is opened without a web server (file://), fetch may fail.
+        console.warn(e);
+
+        // Fallback: render a basic header so the UI still works.
+        mount.innerHTML = `
+            <header class="company-header" role="banner">
+                <div class="company-header__inner">
+                    <div class="company-title" aria-label="Company name">
+                        <div class="company-name">kandy kaviyan</div>
+                    </div>
+                    <div class="company-meta company-meta--right" aria-label="Contact details">
+                        <div class="company-line">Phone: 0773309991</div>
+                        <div class="company-line">peradeniya rd, Kandy.</div>
+                    </div>
+                </div>
+            </header>
+        `;
     }
 }
 
@@ -2459,7 +2500,9 @@ function setActiveNavbarLink(scope = document) {
 }
 
 function init() {
-    injectNavbar().finally(() => {
+    Promise.allSettled([
+        injectNavbar(),
+    ]).finally(() => {
         setupBottomNavbarOnScroll();
     });
 

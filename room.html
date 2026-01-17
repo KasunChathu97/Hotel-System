@@ -9,9 +9,6 @@
 </head>
 
 <body>
-
-    <h1 class="text-center mt-2 mb-3">ABC Room Booking</h1>
-
     <div id="navbar"></div>
 
     <!-- Message area for alerts -->
@@ -23,7 +20,7 @@
             <label for="availabilityDate">Check availability for date:</label>
             <input type="date" id="availabilityDate">
             <button type="button" onclick="loadRooms()">Check</button>
-            <button type="button" onclick="clearAvailabilityDate()">Clear</button>
+            <button type="button" class="btn btn-danger" onclick="clearAvailabilityDate()">Clear</button>
         </div>
         <div id="availabilityLabel" class="availability-label"></div>
         <div id="rooms"></div>
@@ -80,7 +77,7 @@
                     <div id="checkoutSummary" class="receipt-card" aria-live="polite"></div>
 
                     <div class="text-center d-flex justify-content-center gap-2 flex-wrap" style="grid-column: 1 / -1;">
-                        <button type="submit" class="btn btn-secondary" id="findReceiptBtn">Find Receipt</button>
+                        <button type="submit" class="btn btn-success" id="findReceiptBtn">Find Receipt</button>
                         <button type="button" class="btn btn-outline-secondary" id="receiptBackBtn" onclick="resetReceiptCheckout()" style="display:none;">Back</button>
                         <button type="button" class="btn btn-primary" id="receiptPayBtn" onclick="payAndShowReceipt()" style="display:none;">Pay</button>
                     </div>
@@ -95,7 +92,7 @@
         <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
             <h2 class="text-center mt-2 mb-3" style="margin: 0;">Room Booking Details</h2>
             <div class="d-flex gap-2 flex-wrap">
-                <a class="btn btn-secondary" href="room-booking-history.html">History</a>
+                <a class="btn btn-info" href="room-booking-history.html">History</a>
             </div>
         </div>
 
