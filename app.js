@@ -445,7 +445,7 @@ function showRoomBookingHistory() {
     checkedOut.slice(start, end).forEach(({ b, index }) => {
         const actionHtml = `
             <div class="history-actions">
-                <button type="button" class="history-action" onclick="viewBooking(${index})">View</button>
+                <button type="button" class="history-action btn btn-success" onclick="viewBooking(${index})">View</button>
                 <button type="button" class="history-action history-action--danger" onclick="deleteBooking(${index})">Delete</button>
             </div>
         `;
@@ -2365,7 +2365,7 @@ function showBookingHistory() {
             const typeHtml = `<span class="history-badge ${badgeClass}">${escapeHtml(type)}</span>`;
             const actionHtml = `
                 <div class="history-actions">
-                    <button type="button" class="history-action" onclick="viewBooking(${index})">View</button>
+                    <button type="button" class="history-action btn btn-success" onclick="viewBooking(${index})">View</button>
                     <button type="button" class="history-action" onclick="editBooking(${index})">Edit</button>
                     <button type="button" class="history-action history-action--danger" onclick="deleteBooking(${index})">Delete</button>
                 </div>

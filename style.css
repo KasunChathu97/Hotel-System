@@ -569,6 +569,7 @@ body {
     flex-wrap: wrap;
 }
 
+
 .history-action {
     padding: 8px 12px;
     border-radius: 8px;
@@ -577,6 +578,17 @@ body {
     color: #fff;
     cursor: pointer;
     font-weight: 700;
+}
+
+/* Make the View button green (success) */
+.history-action.btn-success {
+    background: #198754 !important;
+    border-color: #198754 !important;
+    color: #fff !important;
+}
+.history-action.btn-success:hover {
+    background: #157347 !important;
+    border-color: #157347 !important;
 }
 
 .history-action:hover {
