@@ -79,7 +79,7 @@
                     <div class="text-center d-flex justify-content-center gap-2 flex-wrap" style="grid-column: 1 / -1;">
                         <button type="submit" class="btn btn-success" id="findReceiptBtn">Find Receipt</button>
                         <button type="button" class="btn btn-outline-secondary" id="receiptBackBtn" onclick="resetReceiptCheckout()" style="display:none;">Back</button>
-                        <button type="button" class="btn btn-primary" id="receiptPayBtn" onclick="payAndShowReceipt()" style="display:none;">Pay</button>
+                        <button type="button" class="btn btn-success" id="receiptPayBtn" onclick="payAndShowReceipt()" style="display:none;">Pay</button>
                     </div>
                 </form>
 
@@ -119,7 +119,6 @@
         <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
             <div class="modal-header">
                 <h3 id="editModalTitle" class="modal-title">Edit Booking</h3>
-                <button type="button" class="modal-close" onclick="closeEditModal()">×</button>
             </div>
 
             <form class="reservation-form" id="editModalForm" onsubmit="saveEditModal(); return false;">

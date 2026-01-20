@@ -472,9 +472,12 @@ function changeRoomBookingHistoryPage(delta) {
 }
 
 function clearRoomBookingHistory() {
-    const ok = confirm('Clear ALL Room Booking History (CHECKOUT records)? This cannot be undone.');
-    if (!ok) return;
+    const modal = getOrCreateClearHistoryModal();
+    modal.style.display = 'flex';
+    modal.setAttribute('aria-hidden', 'false');
+}
 
+function confirmClearHistoryModal() {
     const before = bookingHistory.length;
     bookingHistory = bookingHistory.filter(b => !(b && b.type === 'CHECKOUT'));
     const removed = before - bookingHistory.length;
@@ -484,6 +487,41 @@ function clearRoomBookingHistory() {
     showRoomBookingHistory();
     showBookingHistory();
     showMessage(removed ? `Cleared ${removed} history record(s)` : 'No history records to clear');
+    closeClearHistoryModal();
+}
+
+function closeClearHistoryModal() {
+    const modal = document.getElementById('clearHistoryModal');
+    if (!modal) return;
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+}
+
+function getOrCreateClearHistoryModal() {
+    let modal = document.getElementById('clearHistoryModal');
+    if (modal) return modal;
+
+    modal = document.createElement('div');
+    modal.id = 'clearHistoryModal';
+    modal.className = 'modal-overlay';
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+    modal.innerHTML = `
+        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="clearHistoryModalTitle">
+            <div class="modal-header">
+                <h3 id="clearHistoryModalTitle" class="modal-title" style="display:flex; justify-content:center; align-items:center; margin:auto;">Clear History</h3>
+            </div>
+            <div class="modal-body" style="text-align:center;">
+                <p class="modal-text">Are you sure you want to clear all Room Booking History records? This cannot be undone.</p>
+            </div>
+            <div class="modal-actions modal-actions--center" style="display:flex; justify-content:center; gap:16px; margin-top:20px;">
+                <button type="button" class="btn btn-secondary" style="min-width:100px;" onclick="closeClearHistoryModal()">Cancel</button>
+                <button type="button" class="btn btn-danger" style="min-width:100px;" onclick="confirmClearHistoryModal()">Clear</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    return modal;
 }
 
 function checkoutBooking(index) {
@@ -944,7 +982,7 @@ function findReceiptForPayment() {
             + (Number.isFinite(extrasDefault) ? extrasDefault : 0);
 
         summaryEl.innerHTML = `
-            <div style="font-weight: 1000; text-align: center;">Amount Details</div>
+            <div style="font-weight: 1000; text-align: center; margin-bottom: 18px;">Amount Details</div>
 
             <div class="receipt-row" style="flex-wrap: wrap; gap: 12px; justify-content: space-between;">
                 <span><strong>Customer Name:</strong> ${escapeHtml(customerName)}</span>
@@ -1455,7 +1493,7 @@ function getOrCreateViewModal() {
         <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="viewModalTitle">
             <div class="modal-header">
                 <h3 id="viewModalTitle" class="modal-title">View Booking</h3>
-                <button type="button" class="modal-close" onclick="closeViewModal()">×</button>
+                <!-- Close button removed -->
             </div>
 
             <div class="modal-body">
@@ -1495,12 +1533,11 @@ function getOrCreateViewModal() {
                         <input type="text" id="viewBookingCheckIn" class="form-control" disabled>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" id="viewBookingCheckOutGroup" style="display:none;">
                         <label for="viewBookingCheckOut">Check-out:</label>
                         <input type="text" id="viewBookingCheckOut" class="form-control" disabled>
                     </div>
-
-                    <div class="form-group">
+                    <div class="form-group" id="viewBookingAmountGroup" style="display:none;">
                         <label for="viewBookingAmount">Amount:</label>
                         <input type="text" id="viewBookingAmount" class="form-control" disabled>
                     </div>
@@ -1550,8 +1587,18 @@ function openViewModal(booking) {
     setValue('viewBookingCustomer', booking.customer || '');
     setValue('viewBookingCustomerId', booking.customerId || '');
     setValue('viewBookingCheckIn', checkInText);
-    setValue('viewBookingCheckOut', checkOutText);
-    setValue('viewBookingAmount', amountText);
+    // Show Check-out and Amount only for CHECKOUT type
+    const checkOutGroup = document.getElementById('viewBookingCheckOutGroup');
+    const amountGroup = document.getElementById('viewBookingAmountGroup');
+    if (booking.type === 'CHECKOUT') {
+        if (checkOutGroup) checkOutGroup.style.display = '';
+        if (amountGroup) amountGroup.style.display = '';
+        setValue('viewBookingCheckOut', checkOutText);
+        setValue('viewBookingAmount', amountText);
+    } else {
+        if (checkOutGroup) checkOutGroup.style.display = 'none';
+        if (amountGroup) amountGroup.style.display = 'none';
+    }
     modal.style.display = 'flex';
     modal.setAttribute('aria-hidden', 'false');
 
@@ -1745,17 +1792,17 @@ function getOrCreateDeleteModal() {
     modal.innerHTML = `
         <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
             <div class="modal-header">
-                <h3 id="deleteModalTitle" class="modal-title">Delete Booking</h3>
-                <button type="button" class="modal-close" onclick="closeDeleteModal()">×</button>
+                <h3 id="deleteModalTitle" class="modal-title" style="display:flex; justify-content:center; align-items:center; margin:auto;">Delete Booking</h3>
+                <!-- Close button removed -->
             </div>
 
-            <div class="modal-body">
+            <div class="modal-body" style="text-align:center;">
                 <p id="deleteModalText" class="modal-text"></p>
             </div>
 
-            <div class="modal-actions modal-actions--end">
-                <button type="button" class="history-action" onclick="closeDeleteModal()">Cancel</button>
-                <button type="button" class="history-action history-action--danger" onclick="confirmDeleteModal()">Delete</button>
+            <div class="modal-actions modal-actions--center" style="display:flex; justify-content:center; gap:16px; margin-top:20px;">
+                <button type="button" class="btn btn-secondary" style="min-width:100px;" onclick="closeDeleteModal()">Cancel</button>
+                <button type="button" class="btn btn-danger" style="min-width:100px;" onclick="confirmDeleteModal()">Delete</button>
             </div>
         </div>
     `;
