@@ -455,6 +455,7 @@ function showRoomBookingHistory() {
                 <td>${escapeHtml(b.bookingId || '')}</td>
                 <td>${escapeHtml(b.room ?? '')}</td>
                 <td>${escapeHtml(b.customer || '')}</td>
+                <td>${escapeHtml(b.customerPhone || '')}</td>
                 <td>${escapeHtml(b.customerId || '')}</td>
                 <td>${escapeHtml(formatDateTime(b.checkIn))}</td>
                 <td>${escapeHtml(formatDateTime(b.checkOut))}</td>
