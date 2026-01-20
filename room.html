@@ -26,7 +26,7 @@
         <div id="rooms"></div>
     </div>
 
-        <div class="section" id="receiptSection">
+    <div class="section" id="receiptSection">
         <div class="forms-two-col">
             <div class="reservation-container">
                 <h2 class="text-center mt-2 mb-3">Room Reservation</h2>
@@ -34,16 +34,19 @@
                 <form class="reservation-form" onsubmit="reserveRoom(); return false;">
                     <div class="form-group">
                         <label for="customerName">Customer Name:</label>
-                        <input type="text" id="customerName" class="form-control" placeholder="Enter customer name" required>
+                        <input type="text" id="customerName" class="form-control" placeholder="Enter customer name"
+                            required>
                     </div>
 
                     <div class="form-group">
                         <label for="customerId">Customer ID Number:</label>
-                        <input type="text" id="customerId" class="form-control" placeholder="Enter customer ID number" required>
+                        <input type="text" id="customerId" class="form-control" placeholder="Enter customer ID number"
+                            required>
                     </div>
                     <div class="form-group">
                         <label for="customerPhone">Customer Phone Number:</label>
-                        <input type="text" id="customerPhone" class="form-control" placeholder="Enter customer phone number" required>
+                        <input type="text" id="customerPhone" class="form-control"
+                            placeholder="Enter customer phone number" required>
                     </div>
 
                     <div class="form-group">
@@ -75,15 +78,18 @@
                 <form class="reservation-form" onsubmit="findReceiptForPayment(); return false;">
                     <div class="form-group" id="receiptCustomerIdGroup">
                         <label for="receiptCustomerId">Customer ID Number:</label>
-                        <input type="text" id="receiptCustomerId" class="form-control" placeholder="Enter customer ID number">
+                        <input type="text" id="receiptCustomerId" class="form-control"
+                            placeholder="Enter customer ID number">
                     </div>
 
                     <div id="checkoutSummary" class="receipt-card" aria-live="polite"></div>
 
                     <div class="text-center d-flex justify-content-center gap-2 flex-wrap" style="grid-column: 1 / -1;">
                         <button type="submit" class="btn btn-success" id="findReceiptBtn">Find Receipt</button>
-                        <button type="button" class="btn btn-outline-secondary" id="receiptBackBtn" onclick="resetReceiptCheckout()" style="display:none;">Back</button>
-                        <button type="button" class="btn btn-success" id="receiptPayBtn" onclick="payAndShowReceipt()" style="display:none;">Pay</button>
+                        <button type="button" class="btn btn-outline-secondary" id="receiptBackBtn"
+                            onclick="resetReceiptCheckout()" style="display:none;">Back</button>
+                        <button type="button" class="btn btn-success" id="receiptPayBtn" onclick="payAndShowReceipt()"
+                            style="display:none;">Pay</button>
                     </div>
                 </form>
 
@@ -91,7 +97,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="section">
         <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
             <h2 class="text-center mt-2 mb-3" style="margin: 0;">Room Booking Details</h2>
@@ -143,6 +149,10 @@
                     <label for="editModalCustomerId">Customer ID Number:</label>
                     <input type="text" id="editModalCustomerId" class="form-control" required>
                 </div>
+                <div class="form-group">
+                    <label for="editModalCustomerPhone">Phone Number:</label>
+                    <input type="text" id="editModalCustomerPhone" class="form-control" required>
+                </div>
 
                 <div class="form-group">
                     <label for="editModalRoomNumber">Room Number:</label>
@@ -160,6 +170,8 @@
                     <label for="editModalStartTime">Start Time:</label>
                     <input type="time" id="editModalStartTime" class="form-control" required>
                 </div>
+
+                <div></div>
 
                 <div class="text-center d-flex justify-content-center gap-2 flex-wrap">
                     <button type="submit" class="btn btn-primary">Update</button>

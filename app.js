@@ -1544,6 +1544,10 @@ function getOrCreateViewModal() {
                         <label for="viewBookingCustomerId">Customer ID:</label>
                         <input type="text" id="viewBookingCustomerId" class="form-control" disabled>
                     </div>
+                    <div class="form-group">
+                        <label for="viewBookingCustomerPhone">Phone Number:</label>
+                        <input type="text" id="viewBookingCustomerPhone" class="form-control" disabled>
+                    </div>
 
                     <div class="form-group">
                         <label for="viewBookingCheckIn">Check-in:</label>
@@ -1603,6 +1607,7 @@ function openViewModal(booking) {
     setValue('viewBookingRoom', roomText);
     setValue('viewBookingCustomer', booking.customer || '');
     setValue('viewBookingCustomerId', booking.customerId || '');
+    setValue('viewBookingCustomerPhone', booking.customerPhone || '');
     setValue('viewBookingCheckIn', checkInText);
     // Show Check-out and Amount only for CHECKOUT type
     const checkOutGroup = document.getElementById('viewBookingCheckOutGroup');
@@ -1668,11 +1673,13 @@ function openEditModal(index) {
     const roomEl = document.getElementById('editModalRoomNumber');
     const dateEl = document.getElementById('editModalDate');
     const startEl = document.getElementById('editModalStartTime');
+    const phoneEl = document.getElementById('editModalCustomerPhone');
 
     if (indexEl) indexEl.value = String(index);
     if (bookingIdEl) bookingIdEl.value = b.bookingId || '';
     if (nameEl) nameEl.value = b.customer || '';
     if (customerIdEl) customerIdEl.value = b.customerId || '';
+    if (phoneEl) phoneEl.value = b.customerPhone || '';
 
     if (roomEl) {
         roomEl.innerHTML = '<option value="">Select Room Number</option>';
@@ -1725,6 +1732,7 @@ function saveEditModal() {
     const roomEl = document.getElementById('editModalRoomNumber');
     const dateEl = document.getElementById('editModalDate');
     const startEl = document.getElementById('editModalStartTime');
+    const phoneEl = document.getElementById('editModalCustomerPhone');
 
     const index = indexEl?.value != null ? parseInt(indexEl.value, 10) : NaN;
     if (!Number.isFinite(index)) {
@@ -1740,11 +1748,12 @@ function saveEditModal() {
 
     const name = (nameEl?.value || '').trim();
     const customerId = (customerIdEl?.value || '').trim();
+    const customerPhone = (phoneEl?.value || '').trim();
     const roomId = parseInt(roomEl?.value || '', 10);
     const date = dateEl?.value;
     const start = startEl?.value;
 
-    if (!name || !customerId || !Number.isFinite(roomId) || !date || !start) {
+    if (!name || !customerId || !customerPhone || !Number.isFinite(roomId) || !date || !start) {
         showMessage('Please fill all fields', 'red');
         return;
     }
@@ -1777,6 +1786,7 @@ function saveEditModal() {
         room: roomId,
         customer: name,
         customerId,
+        customerPhone,
         checkIn: inTime.toISOString(),
         checkOut: outTime.toISOString(),
     };
