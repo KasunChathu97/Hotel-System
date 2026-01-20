@@ -1433,6 +1433,10 @@ function reserveRoom() {
         }
     }
 
+    // Get phone number from form
+    const customerPhoneEl = document.getElementById('customerPhone');
+    const customerPhone = (customerPhoneEl?.value || '').trim();
+
     if (editingReservationIndex != null) {
         bookingHistory[editingReservationIndex] = {
             ...bookingHistory[editingReservationIndex],
@@ -1441,6 +1445,7 @@ function reserveRoom() {
             room: roomId,
             customer: name,
             customerId,
+            customerPhone,
             checkIn: checkIn,
             checkOut: checkOut,
         };
@@ -1452,6 +1457,7 @@ function reserveRoom() {
             room: roomId,
             customer: name,
             customerId,
+            customerPhone,
             checkIn: checkIn,
             checkOut: checkOut,
             createdAtISO,
@@ -1468,6 +1474,17 @@ function reserveRoom() {
     } else {
         showMessage("Room reserved successfully");
     }
+
+    // Clear Room Reservation form fields after submission
+    if (nameEl) nameEl.value = '';
+    if (customerIdEl) customerIdEl.value = '';
+    if (customerPhoneEl) customerPhoneEl.value = '';
+    const roomNumberEl = document.getElementById('room-number');
+    if (roomNumberEl) roomNumberEl.selectedIndex = 0;
+    const dateEl = document.getElementById('date');
+    if (dateEl) dateEl.value = '';
+    const startTimeEl = document.getElementById('start-time');
+    if (startTimeEl) startTimeEl.value = '';
 
     editingReservationIndex = null;
 
@@ -2344,7 +2361,8 @@ function showBookingHistory() {
                 </div>
             `;
 
-            return { createdAt, bookingId, typeHtml, room, customer, customerId, checkInText, actionHtml };
+            const customerPhone = escapeHtml(b.customerPhone || '');
+            return { createdAt, bookingId, typeHtml, room, customer, customerPhone, customerId, checkInText, actionHtml };
         });
 
     if (el.tagName === 'TABLE') {
@@ -2358,6 +2376,7 @@ function showBookingHistory() {
                     <td>${r.typeHtml}</td>
                     <td>${escapeHtml(r.room)}</td>
                     <td>${r.customer}</td>
+                    <td>${r.customerPhone}</td>
                     <td>${r.customerId}</td>
                     <td>${r.checkInText}</td>
                     <td>${r.actionHtml}</td>
