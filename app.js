@@ -450,6 +450,8 @@ function showRoomBookingHistory() {
             </div>
         `;
 
+        const idFront = b.customerIdImageFront || '';
+        const idBack = b.customerIdImageBack || '';
         tbody.innerHTML += `
             <tr>
                 <td>${escapeHtml(b.bookingId || '')}</td>
@@ -457,6 +459,8 @@ function showRoomBookingHistory() {
                 <td>${escapeHtml(b.customer || '')}</td>
                 <td>${escapeHtml(b.customerPhone || '')}</td>
                 <td>${escapeHtml(b.customerId || '')}</td>
+                <td>${idFront ? `<img src="${escapeHtml(idFront)}" alt="ID Front" style="max-width:60px;max-height:40px;">` : ''}</td>
+                <td>${idBack ? `<img src="${escapeHtml(idBack)}" alt="ID Back" style="max-width:60px;max-height:40px;">` : ''}</td>
                 <td>${escapeHtml(formatDateTime(b.checkIn))}</td>
                 <td>${escapeHtml(formatDateTime(b.checkOut))}</td>
                 <td>${b.amount != null ? escapeHtml(`Rs.${b.amount}`) : ''}</td>
@@ -1115,6 +1119,9 @@ function payAndShowReceipt() {
         room: booking.room,
         customer: booking.customer,
         customerId: booking.customerId,
+        customerPhone: booking.customerPhone || '',
+        customerIdImageFront: booking.customerIdImageFront || '',
+        customerIdImageBack: booking.customerIdImageBack || '',
         roomAmount: roomFee,
         foodAmount,
         extrasAmount,
@@ -1358,7 +1365,7 @@ function clearAvailabilityDate() {
     loadRooms();
 }
 
-function reserveRoom() {
+function reserveRoom(idImageFrontPath = '', idImageBackPath = '') {
     const nameEl = document.getElementById('customerName');
     const name = (nameEl?.value || '').trim();
 
@@ -1449,6 +1456,8 @@ function reserveRoom() {
             customerPhone,
             checkIn: checkIn,
             checkOut: checkOut,
+            customerIdImageFront: idImageFrontPath || bookingHistory[editingReservationIndex].customerIdImageFront || '',
+            customerIdImageBack: idImageBackPath || bookingHistory[editingReservationIndex].customerIdImageBack || '',
         };
     } else {
         const createdAtISO = new Date().toISOString();
@@ -1462,7 +1471,9 @@ function reserveRoom() {
             checkIn: checkIn,
             checkOut: checkOut,
             createdAtISO,
-            date: new Date(createdAtISO).toLocaleString()
+            date: new Date(createdAtISO).toLocaleString(),
+            customerIdImageFront: idImageFrontPath || '',
+            customerIdImageBack: idImageBackPath || ''
         });
     }
 
@@ -1622,6 +1633,22 @@ function openViewModal(booking) {
         if (checkOutGroup) checkOutGroup.style.display = 'none';
         if (amountGroup) amountGroup.style.display = 'none';
     }
+    // Show ID images if available
+    const idFront = booking.customerIdImageFront ? `<img src="${booking.customerIdImageFront}" alt="ID Front" style="max-width:120px;max-height:80px;display:block;margin-bottom:8px;">` : '';
+    const idBack = booking.customerIdImageBack ? `<img src="${booking.customerIdImageBack}" alt="ID Back" style="max-width:120px;max-height:80px;display:block;margin-bottom:8px;">` : '';
+    const form = modal.querySelector('.reservation-form');
+    if (form) {
+        let imgGroup = form.querySelector('#viewBookingIdImages');
+        if (!imgGroup) {
+            imgGroup = document.createElement('div');
+            imgGroup.className = 'form-group';
+            imgGroup.id = 'viewBookingIdImages';
+            form.insertBefore(imgGroup, form.querySelector('.form-group:last-of-type'));
+        }
+        imgGroup.innerHTML = '';
+        if (idFront) imgGroup.innerHTML += `<label>ID Image (Front):</label><br>${idFront}`;
+        if (idBack) imgGroup.innerHTML += `<label>ID Image (Back):</label><br>${idBack}`;
+    }
     modal.style.display = 'flex';
     modal.setAttribute('aria-hidden', 'false');
 
@@ -1657,6 +1684,11 @@ function editBooking(index) {
 }
 
 function openEditModal(index) {
+        // Clear file input fields for ID images
+        const idFrontInput = document.getElementById('editModalCustomerIdImageFront');
+        const idBackInput = document.getElementById('editModalCustomerIdImageBack');
+        if (idFrontInput) idFrontInput.value = '';
+        if (idBackInput) idBackInput.value = '';
     const modal = document.getElementById('editModal');
     if (!modal) {
         // Fallback (if modal markup is missing for some reason)
@@ -1782,6 +1814,9 @@ function saveEditModal() {
         return;
     }
 
+    // Accept new image paths as arguments (from form script)
+    let idFrontPath = arguments[0] || existing.customerIdImageFront || '';
+    let idBackPath = arguments[1] || existing.customerIdImageBack || '';
     bookingHistory[index] = {
         ...existing,
         room: roomId,
@@ -1790,6 +1825,8 @@ function saveEditModal() {
         customerPhone,
         checkIn: inTime.toISOString(),
         checkOut: outTime.toISOString(),
+        customerIdImageFront: idFrontPath,
+        customerIdImageBack: idBackPath,
     };
 
     saveData();
@@ -2355,27 +2392,24 @@ function showBookingHistory() {
             const type = b.type || '';
             const room = Number.isFinite(b.room) ? b.room : '';
             const customer = escapeHtml(b.customer || '');
-
+            const customerPhone = escapeHtml(b.customerPhone || '');
+            const idFront = b.customerIdImageFront ? `<img src="${b.customerIdImageFront}" alt="ID Front" style="max-width:60px;max-height:40px;">` : '';
+            const idBack = b.customerIdImageBack ? `<img src="${b.customerIdImageBack}" alt="ID Back" style="max-width:60px;max-height:40px;">` : '';
             const customerId = escapeHtml(b.customerId || '');
             const checkInText = b.checkIn ? escapeHtml(formatDateTime(b.checkIn)) : '';
-
             const badgeClass = type === 'RESERVE'
                 ? 'history-badge--reserve'
                 : (type === 'CHECKOUT' ? 'history-badge--checkout' : 'history-badge--default');
-
-            const typeHtml = `<span class="history-badge ${badgeClass}">${escapeHtml(type)}</span>`;
+            const typeHtml = `<span class=\"history-badge ${badgeClass}\">${escapeHtml(type)}</span>`;
             const actionHtml = `
-                <div class="history-actions">
-                    <button type="button" class="history-action btn btn-success" onclick="viewBooking(${index})">View</button>
-                    <button type="button" class="history-action" onclick="editBooking(${index})">Edit</button>
-                    <button type="button" class="history-action history-action--danger" onclick="deleteBooking(${index})">Delete</button>
+                <div class=\"history-actions\">
+                    <button type=\"button\" class=\"history-action btn btn-success\" onclick=\"viewBooking(${index})\">View</button>
+                    <button type=\"button\" class=\"history-action\" onclick=\"editBooking(${index})\">Edit</button>
+                    <button type=\"button\" class=\"history-action history-action--danger\" onclick=\"deleteBooking(${index})\">Delete</button>
                 </div>
             `;
-
-            const customerPhone = escapeHtml(b.customerPhone || '');
-            return { createdAt, bookingId, typeHtml, room, customer, customerPhone, customerId, checkInText, actionHtml };
+            return { bookingId, createdAt, typeHtml, room, customer, customerPhone, idFront, idBack, customerId, checkInText, actionHtml };
         });
-
     if (el.tagName === 'TABLE') {
         const tbody = el.querySelector('tbody') || el.appendChild(document.createElement('tbody'));
         tbody.innerHTML = '';
@@ -2388,6 +2422,8 @@ function showBookingHistory() {
                     <td>${escapeHtml(r.room)}</td>
                     <td>${r.customer}</td>
                     <td>${r.customerPhone}</td>
+                    <td>${r.idFront}</td>
+                    <td>${r.idBack}</td>
                     <td>${r.customerId}</td>
                     <td>${r.checkInText}</td>
                     <td>${r.actionHtml}</td>

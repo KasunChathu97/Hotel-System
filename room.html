@@ -31,7 +31,7 @@
             <div class="reservation-container">
                 <h2 class="text-center mt-2 mb-3">Room Reservation</h2>
 
-                <form class="reservation-form" onsubmit="reserveRoom(); return false;">
+                <form class="reservation-form" id="reservationForm" enctype="multipart/form-data" method="POST">
                     <div class="form-group">
                         <label for="customerName">Customer Name:</label>
                         <input type="text" id="customerName" class="form-control" placeholder="Enter customer name"
@@ -47,6 +47,15 @@
                         <label for="customerPhone">Customer Phone Number:</label>
                         <input type="text" id="customerPhone" class="form-control"
                             placeholder="Enter customer phone number" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="customerIdImageFront">ID Image (Front):</label>
+                        <input type="file" id="customerIdImageFront" class="form-control" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label for="customerIdImageBack">ID Image (Back):</label>
+                        <input type="file" id="customerIdImageBack" class="form-control" accept="image/*">
                     </div>
 
                     <div class="form-group">
@@ -68,6 +77,27 @@
 
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary">Submit</button>
+                    <script>
+                    // Intercept form submit to upload images via PHP, then call reserveRoom with image paths
+                    document.getElementById('reservationForm').addEventListener('submit', async function(e) {
+                        e.preventDefault();
+                        const form = e.target;
+                        const formData = new FormData(form);
+                        // Only send images to PHP
+                        const imgForm = new FormData();
+                        if (form.customerIdImageFront.files[0]) imgForm.append('customerIdImageFront', form.customerIdImageFront.files[0]);
+                        if (form.customerIdImageBack.files[0]) imgForm.append('customerIdImageBack', form.customerIdImageBack.files[0]);
+                        let imgPaths = { front: '', back: '' };
+                        if (imgForm.has('customerIdImageFront') || imgForm.has('customerIdImageBack')) {
+                            const resp = await fetch('upload_id_images.php', { method: 'POST', body: imgForm });
+                            if (resp.ok) {
+                                const data = await resp.json();
+                                if (data.success) imgPaths = { front: data.front || '', back: data.back || '' };
+                            }
+                        }
+                        reserveRoom(imgPaths.front, imgPaths.back);
+                    });
+                    </script>
                     </div>
                 </form>
             </div>
@@ -116,6 +146,8 @@
                         <th>Room</th>
                         <th>Customer</th>
                         <th>Phone Number</th>
+                        <th>ID Image (Front)</th>
+                        <th>ID Image (Back)</th>
                         <th>Customer ID</th>
                         <th>Check-in</th>
                         <th>Action</th>
@@ -153,6 +185,36 @@
                     <label for="editModalCustomerPhone">Phone Number:</label>
                     <input type="text" id="editModalCustomerPhone" class="form-control" required>
                 </div>
+
+                <div class="form-group">
+                    <label>ID Image (Front):</label>
+                    <div id="editModalCustomerIdImageFrontPreview" style="margin-bottom:8px;"></div>
+                    <input type="file" id="editModalCustomerIdImageFront" class="form-control" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label>ID Image (Back):</label>
+                    <div id="editModalCustomerIdImageBackPreview" style="margin-bottom:8px;"></div>
+                    <input type="file" id="editModalCustomerIdImageBack" class="form-control" accept="image/*">
+                </div>
+<script>
+// Intercept edit modal submit to upload images via PHP, then call saveEditModal with image paths
+document.getElementById('editModalForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const imgForm = new FormData();
+    if (form.editModalCustomerIdImageFront.files[0]) imgForm.append('customerIdImageFront', form.editModalCustomerIdImageFront.files[0]);
+    if (form.editModalCustomerIdImageBack.files[0]) imgForm.append('customerIdImageBack', form.editModalCustomerIdImageBack.files[0]);
+    let imgPaths = { front: '', back: '' };
+    if (imgForm.has('customerIdImageFront') || imgForm.has('customerIdImageBack')) {
+        const resp = await fetch('upload_id_images.php', { method: 'POST', body: imgForm });
+        if (resp.ok) {
+            const data = await resp.json();
+            if (data.success) imgPaths = { front: data.front || '', back: data.back || '' };
+        }
+    }
+    saveEditModal(imgPaths.front, imgPaths.back);
+});
+</script>
 
                 <div class="form-group">
                     <label for="editModalRoomNumber">Room Number:</label>
