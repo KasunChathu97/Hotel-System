@@ -68,6 +68,15 @@
                     <div class="form-group">
                         <label for="date">Date:</label>
                         <input type="date" id="date" class="form-control" required>
+                        <script>
+                        // Hide past days by default in the date picker
+                        const dateInput = document.getElementById('date');
+                        const today = new Date();
+                        const yyyy = today.getFullYear();
+                        const mm = String(today.getMonth() + 1).padStart(2, '0');
+                        const dd = String(today.getDate()).padStart(2, '0');
+                        dateInput.min = `${yyyy}-${mm}-${dd}`;
+                        </script>
                     </div>
 
                     <div class="form-group">
@@ -77,27 +86,27 @@
 
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary">Submit</button>
-                    <script>
-                    // Intercept form submit to upload images via PHP, then call reserveRoom with image paths
-                    document.getElementById('reservationForm').addEventListener('submit', async function(e) {
-                        e.preventDefault();
-                        const form = e.target;
-                        const formData = new FormData(form);
-                        // Only send images to PHP
-                        const imgForm = new FormData();
-                        if (form.customerIdImageFront.files[0]) imgForm.append('customerIdImageFront', form.customerIdImageFront.files[0]);
-                        if (form.customerIdImageBack.files[0]) imgForm.append('customerIdImageBack', form.customerIdImageBack.files[0]);
-                        let imgPaths = { front: '', back: '' };
-                        if (imgForm.has('customerIdImageFront') || imgForm.has('customerIdImageBack')) {
-                            const resp = await fetch('upload_id_images.php', { method: 'POST', body: imgForm });
-                            if (resp.ok) {
-                                const data = await resp.json();
-                                if (data.success) imgPaths = { front: data.front || '', back: data.back || '' };
-                            }
-                        }
-                        reserveRoom(imgPaths.front, imgPaths.back);
-                    });
-                    </script>
+                        <script>
+                            // Intercept form submit to upload images via PHP, then call reserveRoom with image paths
+                            document.getElementById('reservationForm').addEventListener('submit', async function (e) {
+                                e.preventDefault();
+                                const form = e.target;
+                                const formData = new FormData(form);
+                                // Only send images to PHP
+                                const imgForm = new FormData();
+                                if (form.customerIdImageFront.files[0]) imgForm.append('customerIdImageFront', form.customerIdImageFront.files[0]);
+                                if (form.customerIdImageBack.files[0]) imgForm.append('customerIdImageBack', form.customerIdImageBack.files[0]);
+                                let imgPaths = { front: '', back: '' };
+                                if (imgForm.has('customerIdImageFront') || imgForm.has('customerIdImageBack')) {
+                                    const resp = await fetch('upload_id_images.php', { method: 'POST', body: imgForm });
+                                    if (resp.ok) {
+                                        const data = await resp.json();
+                                        if (data.success) imgPaths = { front: data.front || '', back: data.back || '' };
+                                    }
+                                }
+                                reserveRoom(imgPaths.front, imgPaths.back);
+                            });
+                        </script>
                     </div>
                 </form>
             </div>
@@ -155,6 +164,13 @@
                 </thead>
                 <tbody></tbody>
             </table>
+            <div class="d-flex justify-content-between align-items-center gap-2 mt-3">
+                <button type="button" class="history-action" id="bookingDetailsPrevBtn"
+                    onclick="changeBookingDetailsPage(-1)">Previous</button>
+                <div id="bookingDetailsPageIndicator" class="fw-bold"></div>
+                <button type="button" class="history-action" id="bookingDetailsNextBtn"
+                    onclick="changeBookingDetailsPage(1)">Next</button>
+            </div>
         </div>
     </div>
 
@@ -196,25 +212,25 @@
                     <div id="editModalCustomerIdImageBackPreview" style="margin-bottom:8px;"></div>
                     <input type="file" id="editModalCustomerIdImageBack" class="form-control" accept="image/*">
                 </div>
-<script>
-// Intercept edit modal submit to upload images via PHP, then call saveEditModal with image paths
-document.getElementById('editModalForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const form = e.target;
-    const imgForm = new FormData();
-    if (form.editModalCustomerIdImageFront.files[0]) imgForm.append('customerIdImageFront', form.editModalCustomerIdImageFront.files[0]);
-    if (form.editModalCustomerIdImageBack.files[0]) imgForm.append('customerIdImageBack', form.editModalCustomerIdImageBack.files[0]);
-    let imgPaths = { front: '', back: '' };
-    if (imgForm.has('customerIdImageFront') || imgForm.has('customerIdImageBack')) {
-        const resp = await fetch('upload_id_images.php', { method: 'POST', body: imgForm });
-        if (resp.ok) {
-            const data = await resp.json();
-            if (data.success) imgPaths = { front: data.front || '', back: data.back || '' };
-        }
-    }
-    saveEditModal(imgPaths.front, imgPaths.back);
-});
-</script>
+                <script>
+                    // Intercept edit modal submit to upload images via PHP, then call saveEditModal with image paths
+                    document.getElementById('editModalForm').addEventListener('submit', async function (e) {
+                        e.preventDefault();
+                        const form = e.target;
+                        const imgForm = new FormData();
+                        if (form.editModalCustomerIdImageFront.files[0]) imgForm.append('customerIdImageFront', form.editModalCustomerIdImageFront.files[0]);
+                        if (form.editModalCustomerIdImageBack.files[0]) imgForm.append('customerIdImageBack', form.editModalCustomerIdImageBack.files[0]);
+                        let imgPaths = { front: '', back: '' };
+                        if (imgForm.has('customerIdImageFront') || imgForm.has('customerIdImageBack')) {
+                            const resp = await fetch('upload_id_images.php', { method: 'POST', body: imgForm });
+                            if (resp.ok) {
+                                const data = await resp.json();
+                                if (data.success) imgPaths = { front: data.front || '', back: data.back || '' };
+                            }
+                        }
+                        saveEditModal(imgPaths.front, imgPaths.back);
+                    });
+                </script>
 
                 <div class="form-group">
                     <label for="editModalRoomNumber">Room Number:</label>

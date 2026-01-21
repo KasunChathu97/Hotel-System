@@ -1,3 +1,99 @@
+let bookingDetailsPage = 0;
+const bookingDetailsPerPage = 10;
+
+function showBookingHistory() {
+    const el = document.getElementById('bookingHistory');
+    if (!el) return;
+
+    const filtered = bookingHistory
+        .map((b, index) => ({ b, index }))
+        .filter(({ b }) => b && b.type !== 'CHECKOUT');
+    const totalPages = Math.max(1, Math.ceil(filtered.length / bookingDetailsPerPage));
+    bookingDetailsPage = Math.min(Math.max(0, bookingDetailsPage), totalPages - 1);
+    const start = bookingDetailsPage * bookingDetailsPerPage;
+    const end = start + bookingDetailsPerPage;
+    const rows = filtered
+        .slice(start, end)
+        .reverse()
+        .map(({ b, index }) => {
+            const createdAt = b.createdAtISO ? formatDateTime(b.createdAtISO) : (b.date || '');
+            const bookingId = escapeHtml(b.bookingId || '');
+            const type = b.type || '';
+            const room = Number.isFinite(b.room) ? b.room : '';
+            const customer = escapeHtml(b.customer || '');
+            const customerPhone = escapeHtml(b.customerPhone || '');
+            const idFront = b.customerIdImageFront ? `<img src="${b.customerIdImageFront}" alt="ID Front" style="max-width:60px;max-height:40px;">` : '';
+            const idBack = b.customerIdImageBack ? `<img src="${b.customerIdImageBack}" alt="ID Back" style="max-width:60px;max-height:40px;">` : '';
+            const customerId = escapeHtml(b.customerId || '');
+            const checkInText = b.checkIn ? escapeHtml(formatDateTime(b.checkIn)) : '';
+            const badgeClass = type === 'RESERVE'
+                ? 'history-badge--reserve'
+                : (type === 'CHECKOUT' ? 'history-badge--checkout' : 'history-badge--default');
+            const typeHtml = `<span class=\"history-badge ${badgeClass}\">${escapeHtml(type)}</span>`;
+            const actionHtml = `
+                <div class=\"history-actions\">
+                    <button type=\"button\" class=\"history-action btn btn-success\" onclick=\"viewBooking(${index})\">View</button>
+                    <button type=\"button\" class=\"history-action\" onclick=\"editBooking(${index})\">Edit</button>
+                    <button type=\"button\" class=\"history-action history-action--danger\" onclick=\"deleteBooking(${index})\">Delete</button>
+                </div>
+            `;
+            return { bookingId, createdAt, typeHtml, room, customer, customerPhone, idFront, idBack, customerId, checkInText, actionHtml };
+        });
+    if (el.tagName === 'TABLE') {
+        const tbody = el.querySelector('tbody') || el.appendChild(document.createElement('tbody'));
+        tbody.innerHTML = '';
+        rows.forEach(r => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${r.bookingId}</td>
+                    <td>${escapeHtml(r.createdAt)}</td>
+                    <td>${r.typeHtml}</td>
+                    <td>${escapeHtml(r.room)}</td>
+                    <td>${r.customer}</td>
+                    <td>${r.customerPhone}</td>
+                    <td>${r.idFront}</td>
+                    <td>${r.idBack}</td>
+                    <td>${r.customerId}</td>
+                    <td>${r.checkInText}</td>
+                    <td>${r.actionHtml}</td>
+                </tr>
+            `;
+        });
+        // Update pagination indicator
+        const pageEl = document.getElementById('bookingDetailsPageIndicator');
+        if (pageEl) pageEl.textContent = `Page ${bookingDetailsPage + 1} of ${totalPages}`;
+        // Update button states
+        const prevBtn = document.getElementById('bookingDetailsPrevBtn');
+        const nextBtn = document.getElementById('bookingDetailsNextBtn');
+        if (prevBtn) prevBtn.disabled = bookingDetailsPage <= 0;
+        if (nextBtn) nextBtn.disabled = bookingDetailsPage >= totalPages - 1;
+        return;
+    }
+    // Fallback for older UL layout
+    el.innerHTML = '';
+    el.classList.add('history-list');
+    rows.forEach(r => {
+        el.innerHTML += `
+            <li class="history-item">
+                <div class="history-item__top">
+                    ${r.typeHtml}
+                    <span class="history-date">${escapeHtml(r.createdAt)}</span>
+                </div>
+                <div class="history-item__main">
+                    <div class="history-title">Room ${escapeHtml(r.room)} • ${r.customer}</div>
+                    ${r.bookingId ? `<div class="history-detail">Booking ID: ${r.bookingId}</div>` : ''}
+                    ${r.customerId ? `<div class="history-detail">Customer ID: ${r.customerId}</div>` : ''}
+                    ${r.checkInText ? `<div class="history-detail">Check-in: ${r.checkInText}</div>` : ''}
+                </div>
+            </li>
+        `;
+    });
+}
+
+function changeBookingDetailsPage(delta) {
+    bookingDetailsPage = bookingDetailsPage + Number(delta || 0);
+    showBookingHistory();
+}
 let ingredientHistory = JSON.parse(localStorage.getItem('ingredientHistory')) || [];
 
 let bookingHistory = JSON.parse(localStorage.getItem('bookingHistory')) || [];
@@ -1522,36 +1618,29 @@ function getOrCreateViewModal() {
         <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="viewModalTitle">
             <div class="modal-header">
                 <h3 id="viewModalTitle" class="modal-title">View Booking</h3>
-                <!-- Close button removed -->
             </div>
-
             <div class="modal-body">
                 <div class="reservation-form" style="gap: 12px;">
                     <div class="form-group">
                         <label for="viewBookingId">Booking ID:</label>
                         <input type="text" id="viewBookingId" class="form-control" disabled>
                     </div>
-
                     <div class="form-group">
                         <label for="viewBookingCreatedAt">Date & Time:</label>
                         <input type="text" id="viewBookingCreatedAt" class="form-control" disabled>
                     </div>
-
                     <div class="form-group">
                         <label for="viewBookingType">Type:</label>
                         <input type="text" id="viewBookingType" class="form-control" disabled>
                     </div>
-
                     <div class="form-group">
                         <label for="viewBookingRoom">Room:</label>
                         <input type="text" id="viewBookingRoom" class="form-control" disabled>
                     </div>
-
                     <div class="form-group">
                         <label for="viewBookingCustomer">Customer:</label>
                         <input type="text" id="viewBookingCustomer" class="form-control" disabled>
                     </div>
-
                     <div class="form-group">
                         <label for="viewBookingCustomerId">Customer ID:</label>
                         <input type="text" id="viewBookingCustomerId" class="form-control" disabled>
@@ -1560,12 +1649,10 @@ function getOrCreateViewModal() {
                         <label for="viewBookingCustomerPhone">Phone Number:</label>
                         <input type="text" id="viewBookingCustomerPhone" class="form-control" disabled>
                     </div>
-
                     <div class="form-group">
                         <label for="viewBookingCheckIn">Check-in:</label>
                         <input type="text" id="viewBookingCheckIn" class="form-control" disabled>
                     </div>
-
                     <div class="form-group" id="viewBookingCheckOutGroup" style="display:none;">
                         <label for="viewBookingCheckOut">Check-out:</label>
                         <input type="text" id="viewBookingCheckOut" class="form-control" disabled>
@@ -1574,9 +1661,12 @@ function getOrCreateViewModal() {
                         <label for="viewBookingAmount">Amount:</label>
                         <input type="text" id="viewBookingAmount" class="form-control" disabled>
                     </div>
+                    <div class="row" id="viewBookingIdImagesRow">
+                        <div class="col-md-6" id="viewBookingIdImageFrontCol"></div>
+                        <div class="col-md-6" id="viewBookingIdImageBackCol"></div>
+                    </div>
                 </div>
             </div>
-
             <div class="modal-actions">
                 <button type="button" class="history-action" onclick="closeViewModal()">Close</button>
             </div>
@@ -1633,22 +1723,13 @@ function openViewModal(booking) {
         if (checkOutGroup) checkOutGroup.style.display = 'none';
         if (amountGroup) amountGroup.style.display = 'none';
     }
-    // Show ID images if available
-    const idFront = booking.customerIdImageFront ? `<img src="${booking.customerIdImageFront}" alt="ID Front" style="max-width:120px;max-height:80px;display:block;margin-bottom:8px;">` : '';
-    const idBack = booking.customerIdImageBack ? `<img src="${booking.customerIdImageBack}" alt="ID Back" style="max-width:120px;max-height:80px;display:block;margin-bottom:8px;">` : '';
-    const form = modal.querySelector('.reservation-form');
-    if (form) {
-        let imgGroup = form.querySelector('#viewBookingIdImages');
-        if (!imgGroup) {
-            imgGroup = document.createElement('div');
-            imgGroup.className = 'form-group';
-            imgGroup.id = 'viewBookingIdImages';
-            form.insertBefore(imgGroup, form.querySelector('.form-group:last-of-type'));
-        }
-        imgGroup.innerHTML = '';
-        if (idFront) imgGroup.innerHTML += `<label>ID Image (Front):</label><br>${idFront}`;
-        if (idBack) imgGroup.innerHTML += `<label>ID Image (Back):</label><br>${idBack}`;
-    }
+    // Show ID images if available, side by side
+    const idFront = booking.customerIdImageFront ? `<label>ID Image (Front):</label><br><img src="${booking.customerIdImageFront}" alt="ID Front" style="max-width:120px;max-height:80px;display:block;margin-bottom:8px;">` : '';
+    const idBack = booking.customerIdImageBack ? `<label>ID Image (Back):</label><br><img src="${booking.customerIdImageBack}" alt="ID Back" style="max-width:120px;max-height:80px;display:block;margin-bottom:8px;">` : '';
+    const frontCol = modal.querySelector('#viewBookingIdImageFrontCol');
+    const backCol = modal.querySelector('#viewBookingIdImageBackCol');
+    if (frontCol) frontCol.innerHTML = idFront;
+    if (backCol) backCol.innerHTML = idBack;
     modal.style.display = 'flex';
     modal.setAttribute('aria-hidden', 'false');
 
@@ -2381,10 +2462,15 @@ function showBookingHistory() {
     const el = document.getElementById('bookingHistory');
     if (!el) return;
 
-    const rows = bookingHistory
+    const filtered = bookingHistory
         .map((b, index) => ({ b, index }))
-        .filter(({ b }) => b && b.type !== 'CHECKOUT')
-        .slice(-10)
+        .filter(({ b }) => b && b.type !== 'CHECKOUT');
+    const totalPages = Math.max(1, Math.ceil(filtered.length / bookingDetailsPerPage));
+    bookingDetailsPage = Math.min(Math.max(0, bookingDetailsPage), totalPages - 1);
+    const start = bookingDetailsPage * bookingDetailsPerPage;
+    const end = start + bookingDetailsPerPage;
+    const rows = filtered
+        .slice(start, end)
         .reverse()
         .map(({ b, index }) => {
             const createdAt = b.createdAtISO ? formatDateTime(b.createdAtISO) : (b.date || '');
@@ -2430,6 +2516,14 @@ function showBookingHistory() {
                 </tr>
             `;
         });
+        // Update pagination indicator
+        const pageEl = document.getElementById('bookingDetailsPageIndicator');
+        if (pageEl) pageEl.textContent = `Page ${bookingDetailsPage + 1} of ${totalPages}`;
+        // Update button states
+        const prevBtn = document.getElementById('bookingDetailsPrevBtn');
+        const nextBtn = document.getElementById('bookingDetailsNextBtn');
+        if (prevBtn) prevBtn.disabled = bookingDetailsPage <= 0;
+        if (nextBtn) nextBtn.disabled = bookingDetailsPage >= totalPages - 1;
         return;
     }
 
